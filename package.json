@@ -1,9 +1,14 @@
 {
+  "scripts": {
+    "start": "supervisor app",
+    "init": "node server/init"
+  },
   "devDependencies": {
     "body-parser": "^1.18.2",
     "cookie-session": "^2.0.0-beta.3",
     "express": "^4.16.2",
-    "logger": "^0.0.1"
+    "logger": "^0.0.1",
+    "morgan": "^1.9.0"
   },
   "dependencies": {
     "mysql2": "^1.5.1",
