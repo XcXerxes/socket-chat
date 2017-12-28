@@ -13,11 +13,22 @@ module.exports = (sequlize, DataType) => {
       allowNull: false
     },
     password: {
-      type: DataType.STRING(32),
+      type: DataType.STRING(16),
       allowNull: false
     },
-    role: {
+    confirm_password: {
+      type: DataType.STRING(16),
+      allowNull: false
+    },
+    email: {
       type: DataType.STRING(32),
+      allowNull: false,
+      validate: {
+        isEmail: true
+      }
+    },
+    role: {
+      type: DataType.STRING(16),
       defaultValue: 'regist',
       allowNull: false
     }
