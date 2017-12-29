@@ -1,4 +1,4 @@
-const db = require('../api')
+const db = require('../models')
 const assertError = require('../utils/assert')
 
 /**
@@ -31,9 +31,66 @@ exports.login = (req, res) => {
   })
 }
 
+/**
+ * 用户注册
+ * @param {*} req 
+ * @param {*} res 
+ */
 exports.register = (req, res) => {
+  // let client_ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
+  //   || req.socket.remoteAddress || req.connection.socket.remoteAddress
   const {username, password, confirm_password, email} = req.body
   if (!username || !password || !confirm_password || !email || password !== confirm_password) {
     return res.json(assertError('参数不能为空或者参数有误'))
+  }
+  let {ip} = req
+  ip && (ip = ip.substr(ip.lastIndexOf(":") + 1))
+  db.user.create({
+    username,
+    password,
+    confirm_password,
+    email,
+    client_ip: ip
+  }).then(result => {
+    return res.json({
+      code: 200,
+      message: 'success',
+      data: {id: result.id}
+    })
+  }).catch(err => {
+    return res.json(assertError(err.toString()))
+  })
+}
+
+exports.checkUserNameOrEmail = (req, res) => {
+  const {username, email} = req.body
+  if (username || email) {
+    db.user.findOne({
+      where: {
+        $or: [
+          {username},
+          {email}
+        ]
+      }
+    }).then(result => {
+      if (result) {
+        console.log("result ===========" + result)
+        return res.json({
+          code: 200,
+          message: '已存在',
+          data: {id: result.id}
+        })
+      } else {
+        return res.json({
+          code: -404,
+          message: '不存在',
+          data: {}
+        })
+      }
+    }).catch(err => {
+      return res.json(assertError(err.toString()))
+    })
+  } else {
+    return res.json(assertError('缺少参数'))
   }
 }

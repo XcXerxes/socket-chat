@@ -10,15 +10,24 @@ module.exports = (sequlize, DataType) => {
     },
     username: {
       type: DataType.STRING(16),
-      allowNull: false
+      allowNull: false,
+      validate: {
+        len: [3, 15]
+      }
     },
     password: {
       type: DataType.STRING(16),
-      allowNull: false
+      allowNull: false,
+      validate: {
+        len: [6, 15]
+      }
     },
     confirm_password: {
       type: DataType.STRING(16),
-      allowNull: false
+      allowNull: false,
+      validate: {
+        len: [6, 15]
+      }
     },
     email: {
       type: DataType.STRING(32),
@@ -26,6 +35,13 @@ module.exports = (sequlize, DataType) => {
       validate: {
         isEmail: true
       }
+    },
+    client_ip: {
+      type: DataType.STRING(16),
+      allowNull: true
+      // validate: {
+      //   isIP: true
+      // }
     },
     role: {
       type: DataType.STRING(16),

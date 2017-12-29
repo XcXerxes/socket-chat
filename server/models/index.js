@@ -23,6 +23,7 @@ dirNames.filter(file => file.includes('.') && file !== 'index.js')
 })
 db.sequelize = sequelize
 db.Sequelize = Sequelize
+db.Op = Sequelize.Op
 
 module.exports = db
 
