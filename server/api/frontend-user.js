@@ -8,6 +8,7 @@ const assertError = require('../utils/assert')
  */
 exports.login = (req, res) => {
   const {username, password} = req.body
+  const self = req
   if (!username || !password) {
     return res.json(assertError('用户名或密码不能为空'))
   }
@@ -21,7 +22,16 @@ exports.login = (req, res) => {
   }).then(result => {
     if (result) {
       if (result.password === password) {
-        console.log('登录成功')
+        req.session.userId = result.id
+        req.session.username = result.username
+        res.json({
+          code: 200,
+          message: 'success',
+          data: {
+            userId: result.userId,
+            username: result.username
+          }
+        })
       } else {
         return res.json(assertError('密码错误'))
       }
