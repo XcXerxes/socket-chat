@@ -2,11 +2,14 @@ const express = require('express')
 const logger = require('morgan')
 const bodyParser = require('body-parser')
 const path = require('path')
+const cors = require('cors')
 const cookieSession = require('cookie-session')
 const session = require('express-session')
 
 const routes = require('./server/routes')
 const app = express()
+const serve = require('http').createServer(app)
+const io = require('socket.io')(serve)
 
 app.use(logger('dev'))
 app.use(session({
@@ -21,13 +24,20 @@ app.use(session({
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(express.static(path.join(__dirname, 'static')))
+app.use(cors())
 app.use('/chat', routes)
+
+
 console.log(`session expires${new Date(Date.now() + 6000)}`)
 
+/* socket */
+io.on('connection', socket => {
+  console.log('a user connected')
+})
 
 const port = process.env.PORT || 8888
 
-app.listen(port, (err) => {
+serve.listen(port, (err) => {
   if (err) {
     console.log(err)
   }
