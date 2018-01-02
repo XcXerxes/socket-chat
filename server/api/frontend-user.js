@@ -28,7 +28,7 @@ exports.login = (req, res) => {
           code: 200,
           message: 'success',
           data: {
-            userId: result.userId,
+            userId: result.id,
             username: result.username
           }
         })

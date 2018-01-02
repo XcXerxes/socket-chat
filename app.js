@@ -29,10 +29,15 @@ app.use('/chat', routes)
 
 
 console.log(`session expires${new Date(Date.now() + 6000)}`)
-
+let arr = []
 /* socket */
 io.on('connection', socket => {
   console.log('a user connected')
+  socket.on('user-online', data => {
+    arr.push(data)
+    socket.emit('user-online', arr)
+    console.log(data)
+  })
 })
 
 const port = process.env.PORT || 8888
