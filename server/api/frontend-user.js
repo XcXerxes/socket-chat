@@ -1,5 +1,6 @@
 const db = require('../models')
 const assertError = require('../utils/assert')
+const utils = require('../utils')
 
 /**
  * 用户登陆
@@ -29,7 +30,8 @@ exports.login = (req, res) => {
           message: 'success',
           data: {
             userId: result.id,
-            username: result.username
+            username: result.username,
+            avatar: result.avatar
           }
         })
       } else {
@@ -60,6 +62,7 @@ exports.register = (req, res) => {
     password,
     confirm_password,
     email,
+    avatar: utils.randomColor(),
     client_ip: ip
   }).then(result => {
     return res.json({

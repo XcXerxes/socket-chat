@@ -33,10 +33,34 @@ let arr = []
 /* socket */
 io.on('connection', socket => {
   console.log('a user connected')
+  // 用户进入时
   socket.on('user-online', data => {
+    if (arr.length > 0) {
+      if (arr.findIndex(item => item.userId === data.userId) > -1) {
+        return false
+      }
+    }
+    socket.name = data.userId
     arr.push(data)
+    socket.broadcast.emit('user-online', arr)
     socket.emit('user-online', arr)
     console.log(data)
+  })
+  // 用户发送信息
+  socket.on('user-message', data => {
+    if (data.message) {
+      socket.broadcast.emit('user-message', data)
+      socket.emit('user-message', data)
+    }
+  })
+  socket.on('disconnect', (data = {}) => {
+    const idx = arr.findIndex(item => item.userId === socket.name)
+    console.log('dist====' + data)
+    if (idx > -1) {
+      arr.splice(idx, 1)
+      socket.broadcast.emit('user-online', arr)
+      socket.emit('user-online', arr)
+    }
   })
 })
 

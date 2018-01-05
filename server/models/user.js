@@ -36,6 +36,10 @@ module.exports = (sequlize, DataType) => {
         isEmail: true
       }
     },
+    avatar: {
+      type: DataType.STRING(32),
+      allowNull: false
+    },
     client_ip: {
       type: DataType.STRING(16),
       allowNull: true
